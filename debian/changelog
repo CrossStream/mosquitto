@@ -1,3 +1,9 @@
+mosquitto (2.0.15-2~bpo12+1) bookworm-backports; urgency=medium
+
+  * Rebuild for bookworm-backports. (CVE-2021-34434)
+
+ -- Philippe Coval <rzr@users.sf.net>  Sun, 23 Jul 2023 20:38:25 +0200
+
 mosquitto (2.0.15-2) unstable; urgency=medium
 
   [ Philippe Coval ]
