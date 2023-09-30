@@ -1,0 +1,11 @@
+debian-config.patch
+1571.patch
+deb-test.patch
+missing-test.patch
+ssl-sslcontext-wrap_socket.patch
+Fix-CONNECT-performance-with-many-user-properties.patch
+CVE-2021-34434.patch
+CVE-2023-3592.patch
+CVE-2023-0809.patch
+CVE-2023-28366.patch
+CVE-2023-28366-regression.patch
