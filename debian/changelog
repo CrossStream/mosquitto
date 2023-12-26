@@ -1,3 +1,9 @@
+mosquitto (2.0.18-1~bpo12+1) bookworm-backports; urgency=medium
+
+  * Rebuild for bookworm-backports.
+
+ -- Patrick Zajda <patrick@zajda.fr>  Tue, 26 Dec 2023 11:36:40 +0100
+
 mosquitto (2.0.18-1) unstable; urgency=medium
 
   * New upstream release
