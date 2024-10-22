@@ -1,3 +1,27 @@
+mosquitto (2.0.20-1) unstable; urgency=medium
+
+  * Team upload.
+
+  [ Joachim Zobel ]
+  * New upstream release
+    - Fix for CVE-2024-8376
+  * debian/patches/2895.patch: Changes both service files now (Closes: #1036450)
+  * debian/patches/2894.patch: Removed, applied by upstream
+  * debian/patches/1571.patch: Removed, applied by upstream
+  * Fixed reprotest build_path failure
+  * Fixed 2 lintian warnings
+  * Added Joachim Zobel as uploader
+
+ -- Philippe Coval <rzr@users.sf.net>  Mon, 21 Oct 2024 13:42:51 +0200
+
+mosquitto (2.0.18-1.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Install mosquitto.service into /usr (DEP17 M2).
+    (Closes: #1071917)
+
+ -- Chris Hofstaedtler <zeha@debian.org>  Tue, 13 Aug 2024 20:10:03 +0200
+
 mosquitto (2.0.18-1~bpo12+1) bookworm-backports; urgency=medium
 
   [ Patrick Zajda ]
