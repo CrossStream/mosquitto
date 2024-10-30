@@ -9,3 +9,6 @@ CVE-2023-3592.patch
 CVE-2023-0809.patch
 CVE-2023-28366.patch
 CVE-2023-28366-regression.patch
+CVE-2024-8376-1of3.patch
+CVE-2024-8376-2of3.patch
+CVE-2024-8376-3of3.patch
