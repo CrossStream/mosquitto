@@ -13,3 +13,4 @@ CVE-2024-8376-1of3.patch
 CVE-2024-8376-2of3.patch
 CVE-2024-8376-3of3.patch
 0015-Fix-QoS-1-QoS-2-publish-incorrectly-returning-no-sub.patch
+0016-Fix-crash-on-bridge-using-remapped-topic-being-sent-.patch
