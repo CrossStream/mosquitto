@@ -1,27 +1,29 @@
 From: "Roger A. Light" <roger@atchoo.org>
 Date: Tue, 10 Aug 2021 20:48:21 +0100
 Subject: Fix CONNECT performance with many user-properties.
+
 Origin: https://github.com/eclipse/mosquitto/commit/9d6a73f9f72005c2f19a262f15d28327eedea91f
 Bug: https://bugs.eclipse.org/bugs/show_bug.cgi?id=575314
+Bug: https://gitlab.eclipse.org/eclipsefdn/helpdesk/-/issues/637
 Bug-Debian: https://bugs.debian.org/1001028
 Bug-Debian-Security: https://security-tracker.debian.org/tracker/CVE-2021-41039
-Bug: https://gitlab.eclipse.org/eclipsefdn/helpdesk/-/issues/637
 
 An MQTT v5 client connecting with a large number of user-property properties
 could cause excessive CPU usage, leading to a loss of performance and
 possible denial of service. This has been fixed.
 ---
- ChangeLog.txt                    |  3 ++
- lib/property_mosq.c              | 14 ++++-----
- test/broker/01-connect-575314.py | 49 ++++++++++++++++++++++++++++++++
+ lib/property_mosq.c              | 14 ++++++------
+ test/broker/01-connect-575314.py | 49 ++++++++++++++++++++++++++++++++++++++++
  test/broker/Makefile             |  1 +
  test/broker/test.py              |  1 +
- 5 files changed, 61 insertions(+), 7 deletions(-)
- create mode 100755 test/broker/01-connect-575314.py
+ 4 files changed, 58 insertions(+), 7 deletions(-)
+ create mode 100644 test/broker/01-connect-575314.py
 
+diff --git a/lib/property_mosq.c b/lib/property_mosq.c
+index 0cfc9f9..5f0f24c 100644
 --- a/lib/property_mosq.c
 +++ b/lib/property_mosq.c
-@@ -959,14 +959,14 @@ int mosquitto_property_check_all(int com
+@@ -959,14 +959,14 @@ int mosquitto_property_check_all(int command, const mosquitto_property *properti
  		if(rc) return rc;
  
  		/* Check for duplicates */
@@ -43,6 +45,9 @@ possible denial of service. This has been fixed.
  		}
  
  		p = p->next;
+diff --git a/test/broker/01-connect-575314.py b/test/broker/01-connect-575314.py
+new file mode 100644
+index 0000000..4a8f314
 --- /dev/null
 +++ b/test/broker/01-connect-575314.py
 @@ -0,0 +1,49 @@
@@ -95,6 +100,8 @@ possible denial of service. This has been fixed.
 +
 +do_test()
 +exit(0)
+diff --git a/test/broker/Makefile b/test/broker/Makefile
+index e1501b4..1ee2dd2 100644
 --- a/test/broker/Makefile
 +++ b/test/broker/Makefile
 @@ -20,6 +20,7 @@ ptest : test-compile
@@ -105,6 +112,8 @@ possible denial of service. This has been fixed.
  	./01-connect-allow-anonymous.py
  	./01-connect-bad-packet.py
  	./01-connect-connack-2163.py
+diff --git a/test/broker/test.py b/test/broker/test.py
+index 91a4ca4..3dc0058 100755
 --- a/test/broker/test.py
 +++ b/test/broker/test.py
 @@ -5,6 +5,7 @@ import ptest

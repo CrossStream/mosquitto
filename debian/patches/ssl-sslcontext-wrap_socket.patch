@@ -1,23 +1,44 @@
-Description: Replace uses of ssl.wrap_socket by ssl.SSLContext.wrap_socket
- The function ssl.wrap_socket() is deprecated starting Python 3.7 because it
- does not support hostname matching (which is considered insecure). In Python
- 3.10, the function now throws warnings at runtime, which makes autopkgtest
- fail.
- 
- The function ssl.SSLContext.wrap_socket comes in as the replacement and
- has support for SNI and hostname matching.
- 
- Replaced all uses of ssl.wrap_socket() by equivalent using
- ssl.SSLContext.wrap_socket().
+From: "Roger A. Light" <roger@atchoo.org>
+Date: Mon, 10 Mar 2025 22:52:17 +0100
+Subject: Replace uses of ssl.wrap_socket by ssl.SSLContext.wrap_socket
 
+The function ssl.wrap_socket() is deprecated starting Python 3.7 because it
+does not support hostname matching (which is considered insecure). In Python
+3.10, the function now throws warnings at runtime, which makes autopkgtest
+fail.
+
+The function ssl.SSLContext.wrap_socket comes in as the replacement and
+has support for SNI and hostname matching.
+
+Replaced all uses of ssl.wrap_socket() by equivalent using
+ssl.SSLContext.wrap_socket().
 Author: Olivier Gayot <olivier.gayot@canonical.com>
 Bug-Ubuntu: https://launchpad.net/bugs/1960214
 Forwarded: https://github.com/eclipse/mosquitto/pull/2451
 Last-Update: 2022-02-07
+---
+ test/broker/08-ssl-bridge.py                    | 4 +++-
+ test/broker/08-ssl-connect-cert-auth-crl.py     | 4 +++-
+ test/broker/08-ssl-connect-cert-auth-expired.py | 4 +++-
+ test/broker/08-ssl-connect-cert-auth-revoked.py | 4 +++-
+ test/broker/08-ssl-connect-cert-auth-without.py | 3 ++-
+ test/broker/08-ssl-connect-cert-auth.py         | 4 +++-
+ test/broker/08-ssl-connect-identity.py          | 4 +++-
+ test/broker/08-ssl-connect-no-auth-wrong-ca.py  | 3 ++-
+ test/broker/08-ssl-connect-no-auth.py           | 3 ++-
+ test/broker/08-ssl-connect-no-identity.py       | 3 ++-
+ test/broker/08-ssl-hup-disconnect.py            | 4 +++-
+ test/lib/08-ssl-connect-cert-auth-enc.py        | 7 ++++---
+ test/lib/08-ssl-connect-cert-auth.py            | 7 ++++---
+ test/lib/08-ssl-connect-no-auth.py              | 4 +++-
+ test/lib/08-ssl-fake-cacert.py                  | 7 ++++---
+ 15 files changed, 44 insertions(+), 21 deletions(-)
 
---- mosquitto-2.0.11.orig/test/broker/08-ssl-bridge.py
-+++ mosquitto-2.0.11/test/broker/08-ssl-bridge.py
-@@ -34,7 +34,9 @@ publish_packet = mosq_test.gen_publish("
+diff --git a/test/broker/08-ssl-bridge.py b/test/broker/08-ssl-bridge.py
+index c48e7de..4cbe52e 100755
+--- a/test/broker/08-ssl-bridge.py
++++ b/test/broker/08-ssl-bridge.py
+@@ -34,7 +34,9 @@ publish_packet = mosq_test.gen_publish("bridge/ssl/test", qos=0, payload="messag
  
  sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
  sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -28,9 +49,11 @@ Last-Update: 2022-02-07
  ssock.settimeout(20)
  ssock.bind(('', port1))
  ssock.listen(5)
---- mosquitto-2.0.11.orig/test/broker/08-ssl-connect-cert-auth-crl.py
-+++ mosquitto-2.0.11/test/broker/08-ssl-connect-cert-auth-crl.py
-@@ -31,7 +31,9 @@ broker = mosq_test.start_broker(filename
+diff --git a/test/broker/08-ssl-connect-cert-auth-crl.py b/test/broker/08-ssl-connect-cert-auth-crl.py
+index 6c348a3..0cb448e 100755
+--- a/test/broker/08-ssl-connect-cert-auth-crl.py
++++ b/test/broker/08-ssl-connect-cert-auth-crl.py
+@@ -31,7 +31,9 @@ broker = mosq_test.start_broker(filename=os.path.basename(__file__), port=port2,
  
  try:
      sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -41,9 +64,11 @@ Last-Update: 2022-02-07
      ssock.settimeout(20)
      ssock.connect(("localhost", port1))
  
---- mosquitto-2.0.11.orig/test/broker/08-ssl-connect-cert-auth-expired.py
-+++ mosquitto-2.0.11/test/broker/08-ssl-connect-cert-auth-expired.py
-@@ -31,7 +31,9 @@ broker = mosq_test.start_broker(filename
+diff --git a/test/broker/08-ssl-connect-cert-auth-expired.py b/test/broker/08-ssl-connect-cert-auth-expired.py
+index c7be02a..41e6636 100755
+--- a/test/broker/08-ssl-connect-cert-auth-expired.py
++++ b/test/broker/08-ssl-connect-cert-auth-expired.py
+@@ -31,7 +31,9 @@ broker = mosq_test.start_broker(filename=os.path.basename(__file__), port=port2,
  
  try:
      sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -54,9 +79,11 @@ Last-Update: 2022-02-07
      ssock.settimeout(20)
      try:
          ssock.connect(("localhost", port1))
---- mosquitto-2.0.11.orig/test/broker/08-ssl-connect-cert-auth-revoked.py
-+++ mosquitto-2.0.11/test/broker/08-ssl-connect-cert-auth-revoked.py
-@@ -30,7 +30,9 @@ broker = mosq_test.start_broker(filename
+diff --git a/test/broker/08-ssl-connect-cert-auth-revoked.py b/test/broker/08-ssl-connect-cert-auth-revoked.py
+index 76788bc..9273454 100755
+--- a/test/broker/08-ssl-connect-cert-auth-revoked.py
++++ b/test/broker/08-ssl-connect-cert-auth-revoked.py
+@@ -30,7 +30,9 @@ broker = mosq_test.start_broker(filename=os.path.basename(__file__), port=port2,
  
  try:
      sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -67,9 +94,11 @@ Last-Update: 2022-02-07
      ssock.settimeout(20)
      try:
          ssock.connect(("localhost", port1))
---- mosquitto-2.0.11.orig/test/broker/08-ssl-connect-cert-auth-without.py
-+++ mosquitto-2.0.11/test/broker/08-ssl-connect-cert-auth-without.py
-@@ -28,7 +28,8 @@ connect_packet = mosq_test.gen_connect("
+diff --git a/test/broker/08-ssl-connect-cert-auth-without.py b/test/broker/08-ssl-connect-cert-auth-without.py
+index 932dee2..3e6bf6a 100755
+--- a/test/broker/08-ssl-connect-cert-auth-without.py
++++ b/test/broker/08-ssl-connect-cert-auth-without.py
+@@ -28,7 +28,8 @@ connect_packet = mosq_test.gen_connect("connect-cert-test", keepalive=keepalive)
  broker = mosq_test.start_broker(filename=os.path.basename(__file__), port=port2, use_conf=True)
  
  sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -79,9 +108,11 @@ Last-Update: 2022-02-07
  ssock.settimeout(20)
  try:
      ssock.connect(("localhost", port1))
---- mosquitto-2.0.11.orig/test/broker/08-ssl-connect-cert-auth.py
-+++ mosquitto-2.0.11/test/broker/08-ssl-connect-cert-auth.py
-@@ -32,7 +32,9 @@ broker = mosq_test.start_broker(filename
+diff --git a/test/broker/08-ssl-connect-cert-auth.py b/test/broker/08-ssl-connect-cert-auth.py
+index bf7c67b..26651c3 100755
+--- a/test/broker/08-ssl-connect-cert-auth.py
++++ b/test/broker/08-ssl-connect-cert-auth.py
+@@ -32,7 +32,9 @@ broker = mosq_test.start_broker(filename=os.path.basename(__file__), port=port2,
  
  try:
      sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -92,9 +123,11 @@ Last-Update: 2022-02-07
      ssock.settimeout(20)
      ssock.connect(("localhost", port1))
  
---- mosquitto-2.0.11.orig/test/broker/08-ssl-connect-identity.py
-+++ mosquitto-2.0.11/test/broker/08-ssl-connect-identity.py
-@@ -33,7 +33,9 @@ broker = mosq_test.start_broker(filename
+diff --git a/test/broker/08-ssl-connect-identity.py b/test/broker/08-ssl-connect-identity.py
+index f1bc53d..ba2cbb2 100755
+--- a/test/broker/08-ssl-connect-identity.py
++++ b/test/broker/08-ssl-connect-identity.py
+@@ -33,7 +33,9 @@ broker = mosq_test.start_broker(filename=os.path.basename(__file__), port=port2,
  
  try:
      sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -105,9 +138,11 @@ Last-Update: 2022-02-07
      ssock.settimeout(20)
      ssock.connect(("localhost", port1))
  
---- mosquitto-2.0.11.orig/test/broker/08-ssl-connect-no-auth-wrong-ca.py
-+++ mosquitto-2.0.11/test/broker/08-ssl-connect-no-auth-wrong-ca.py
-@@ -29,7 +29,8 @@ connack_packet = mosq_test.gen_connack(r
+diff --git a/test/broker/08-ssl-connect-no-auth-wrong-ca.py b/test/broker/08-ssl-connect-no-auth-wrong-ca.py
+index 30e3e31..7a18ae6 100755
+--- a/test/broker/08-ssl-connect-no-auth-wrong-ca.py
++++ b/test/broker/08-ssl-connect-no-auth-wrong-ca.py
+@@ -29,7 +29,8 @@ connack_packet = mosq_test.gen_connack(rc=0)
  broker = mosq_test.start_broker(filename=os.path.basename(__file__), port=port2, use_conf=True)
  
  sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -117,9 +152,11 @@ Last-Update: 2022-02-07
  ssock.settimeout(20)
  try:
      ssock.connect(("localhost", port1))
---- mosquitto-2.0.11.orig/test/broker/08-ssl-connect-no-auth.py
-+++ mosquitto-2.0.11/test/broker/08-ssl-connect-no-auth.py
-@@ -32,7 +32,8 @@ broker = mosq_test.start_broker(filename
+diff --git a/test/broker/08-ssl-connect-no-auth.py b/test/broker/08-ssl-connect-no-auth.py
+index 8990afe..7b70b32 100755
+--- a/test/broker/08-ssl-connect-no-auth.py
++++ b/test/broker/08-ssl-connect-no-auth.py
+@@ -32,7 +32,8 @@ broker = mosq_test.start_broker(filename=os.path.basename(__file__), port=port2,
  
  try:
      sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -129,9 +166,11 @@ Last-Update: 2022-02-07
      ssock.settimeout(20)
      ssock.connect(("localhost", port1))
  
---- mosquitto-2.0.11.orig/test/broker/08-ssl-connect-no-identity.py
-+++ mosquitto-2.0.11/test/broker/08-ssl-connect-no-identity.py
-@@ -32,7 +32,8 @@ broker = mosq_test.start_broker(filename
+diff --git a/test/broker/08-ssl-connect-no-identity.py b/test/broker/08-ssl-connect-no-identity.py
+index fcb8f4f..ae34d59 100755
+--- a/test/broker/08-ssl-connect-no-identity.py
++++ b/test/broker/08-ssl-connect-no-identity.py
+@@ -32,7 +32,8 @@ broker = mosq_test.start_broker(filename=os.path.basename(__file__), port=port2,
  
  try:
      sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -141,8 +180,10 @@ Last-Update: 2022-02-07
      ssock.settimeout(20)
      ssock.connect(("localhost", port1))
      
---- mosquitto-2.0.11.orig/test/broker/08-ssl-hup-disconnect.py
-+++ mosquitto-2.0.11/test/broker/08-ssl-hup-disconnect.py
+diff --git a/test/broker/08-ssl-hup-disconnect.py b/test/broker/08-ssl-hup-disconnect.py
+index b9bacd4..648556b 100755
+--- a/test/broker/08-ssl-hup-disconnect.py
++++ b/test/broker/08-ssl-hup-disconnect.py
 @@ -43,7 +43,9 @@ def do_test(option):
  
      try:
@@ -154,9 +195,11 @@ Last-Update: 2022-02-07
          ssock.settimeout(20)
          ssock.connect(("localhost", port))
          mosq_test.do_send_receive(ssock, connect_packet, connack_packet, "connack")
---- mosquitto-2.0.11.orig/test/lib/08-ssl-connect-cert-auth-enc.py
-+++ mosquitto-2.0.11/test/lib/08-ssl-connect-cert-auth-enc.py
-@@ -26,9 +26,10 @@ disconnect_packet = mosq_test.gen_discon
+diff --git a/test/lib/08-ssl-connect-cert-auth-enc.py b/test/lib/08-ssl-connect-cert-auth-enc.py
+index fad6b8b..ad51e12 100755
+--- a/test/lib/08-ssl-connect-cert-auth-enc.py
++++ b/test/lib/08-ssl-connect-cert-auth-enc.py
+@@ -26,9 +26,10 @@ disconnect_packet = mosq_test.gen_disconnect()
  
  sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
  sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -170,9 +213,11 @@ Last-Update: 2022-02-07
  ssock.settimeout(10)
  ssock.bind(('', port))
  ssock.listen(5)
---- mosquitto-2.0.11.orig/test/lib/08-ssl-connect-cert-auth.py
-+++ mosquitto-2.0.11/test/lib/08-ssl-connect-cert-auth.py
-@@ -26,9 +26,10 @@ disconnect_packet = mosq_test.gen_discon
+diff --git a/test/lib/08-ssl-connect-cert-auth.py b/test/lib/08-ssl-connect-cert-auth.py
+index dba818c..f96942e 100755
+--- a/test/lib/08-ssl-connect-cert-auth.py
++++ b/test/lib/08-ssl-connect-cert-auth.py
+@@ -26,9 +26,10 @@ disconnect_packet = mosq_test.gen_disconnect()
  
  sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
  sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -186,9 +231,11 @@ Last-Update: 2022-02-07
  ssock.settimeout(10)
  ssock.bind(('', port))
  ssock.listen(5)
---- mosquitto-2.0.11.orig/test/lib/08-ssl-connect-no-auth.py
-+++ mosquitto-2.0.11/test/lib/08-ssl-connect-no-auth.py
-@@ -25,7 +25,9 @@ disconnect_packet = mosq_test.gen_discon
+diff --git a/test/lib/08-ssl-connect-no-auth.py b/test/lib/08-ssl-connect-no-auth.py
+index d994a5b..17a68d1 100755
+--- a/test/lib/08-ssl-connect-no-auth.py
++++ b/test/lib/08-ssl-connect-no-auth.py
+@@ -25,7 +25,9 @@ disconnect_packet = mosq_test.gen_disconnect()
  
  sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
  sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -199,8 +246,10 @@ Last-Update: 2022-02-07
  ssock.settimeout(10)
  ssock.bind(('', port))
  ssock.listen(5)
---- mosquitto-2.0.11.orig/test/lib/08-ssl-fake-cacert.py
-+++ mosquitto-2.0.11/test/lib/08-ssl-fake-cacert.py
+diff --git a/test/lib/08-ssl-fake-cacert.py b/test/lib/08-ssl-fake-cacert.py
+index a130667..9b97870 100755
+--- a/test/lib/08-ssl-fake-cacert.py
++++ b/test/lib/08-ssl-fake-cacert.py
 @@ -10,9 +10,10 @@ if sys.version < '2.7':
  
  sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
