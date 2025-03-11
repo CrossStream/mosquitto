@@ -3,4 +3,5 @@
 # not executable. As workaround until rebaing to new upstream
 # version, make all py files executable
 chmod -c 755 -- test/broker/*.py
+make -C test ssl 2> /dev/null
 make -C test/broker test
