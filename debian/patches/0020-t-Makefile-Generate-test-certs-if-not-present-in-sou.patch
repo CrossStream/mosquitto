@@ -1,0 +1,55 @@
+From: Philippe Coval <rzr@users.sf.net>
+Date: Tue, 11 Mar 2025 21:05:11 +0100
+Subject: t/Makefile: Generate test certs if not present in sources
+
+Since generated keys have expiration date,
+it means that the tests are not reproductible over time.
+Integrator may be tempted to not rely on upstream files
+and generate them on the fly at built time.
+
+If need files are present this rule will be skip.
+
+This change was motivated for maintenance of 2.0.11
+in Debian 12 (stable).
+
+I noticed that upstream regerated certs in master branch since,
+but still they will expire in future.
+
+Origin: https://github.com/eclipse-mosquitto/mosquitto/pull/3234
+Relate-to: https://salsa.debian.org/debian-iot-team/mosquitto/-/merge_requests/21
+Signed-off-by: Philippe Coval <rzr@users.sf.net>
+---
+ test/Makefile | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/test/Makefile b/test/Makefile
+index 54b15ee..9ee028c 100644
+--- a/test/Makefile
++++ b/test/Makefile
+@@ -1,17 +1,23 @@
+ include ../config.mk
+ 
+-.PHONY: all check test ptest clean
++.PHONY: all check test ptest clean ssl
+ 
+ all :
+ 
+ check : test
+ 
+-test : utest
++ssl: ssl/all-ca.crt
++
++ssl/all-ca.crt: ssl/gen.sh
++	cd "${<D}" && "${CURDIR}/${<}"
++	test -e "$@"
++
++test : utest ssl
+ 	$(MAKE) -C broker test
+ 	$(MAKE) -C lib test
+ 	$(MAKE) -C client test
+ 
+-ptest : utest
++ptest : utest ssl
+ 	$(MAKE) -C broker ptest
+ 	$(MAKE) -C lib ptest
+ 	$(MAKE) -C client test
