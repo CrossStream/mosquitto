@@ -1,3 +1,27 @@
+mosquitto (2.0.11-1.2+deb12u2) bookworm; urgency=medium
+
+  [ Philippe Coval ]
+  * debian/gbp.conf: Build for stable-sec
+  * Rediff patches
+  * d/p/series: Add patches for CVE-2024-8376
+
+  [ Andreas Henriksson ]
+  * d/p/0015-Fix-QoS-1-QoS-2-publish-incorrectly-returning-no-sub.patch
+    - cherry-pick upstream commit fixing regression in CVE-2024-8376 fix
+  * d/p/0016-Fix-crash-on-bridge-using-remapped-topic-being-sent-.patch
+    - cherry-pick upstream fix for CVE-2024-3935
+  * debian/patches/0017-Don-t-allow-SUBACK-with-missing-reason-codes.patch
+    - cherry-pick upstream fix for CVE-2024-10525
+
+  [ Philippe Coval ]
+  * d/patches: Further fix for CVE-2023-28366.
+  * d/patches: Fixed issue in CA cert. creation
+  * d/patches: t/Makefile: Generate test certs if not present in sources
+  * debian/tests: Check ssl certs before running tests
+  * d/patches: Remove generated ssl certs
+
+ -- Philippe Coval <rzr@users.sf.net>  Tue, 22 Apr 2025 21:39:19 +0200
+
 mosquitto (2.0.11-1.2+deb12u1) bookworm-security; urgency=high
 
   * Non-maintainer upload.
