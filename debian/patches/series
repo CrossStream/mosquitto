@@ -18,3 +18,4 @@ CVE-2024-8376-3of3.patch
 0018-Further-fix-for-CVE-2023-28366.patch
 0019-Fixed-issue-in-CA-cert.-creation.patch
 0020-t-Makefile-Generate-test-certs-if-not-present-in-sou.patch
+0021-Remove-generated-ssl-certs.patch
