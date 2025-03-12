@@ -15,3 +15,4 @@ CVE-2024-8376-3of3.patch
 0015-Fix-QoS-1-QoS-2-publish-incorrectly-returning-no-sub.patch
 0016-Fix-crash-on-bridge-using-remapped-topic-being-sent-.patch
 0017-Don-t-allow-SUBACK-with-missing-reason-codes.patch
+0018-Further-fix-for-CVE-2023-28366.patch
